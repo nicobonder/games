@@ -33,3 +33,9 @@
     background-color: #c6091f;
     scale: 1.02;
 }
+
+svg {
+    width: 3rem;
+    height: 3rem;
+    fill: #f51b50;
+  }
