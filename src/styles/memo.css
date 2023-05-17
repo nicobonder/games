@@ -1,0 +1,35 @@
+.btn_memo {
+    background: #f51b50;
+}
+
+.btn_memo:hover{
+    background: #d30639;
+    scale: 1.02;
+}
+
+.btn_food {
+    background-color: #eee617;
+}
+
+.btn_food:hover {
+    background-color: #d5ce0b;
+    scale: 1.02;
+}
+
+.btn_brand {
+    background-color: #20dcdf;
+}
+
+.btn_brand:hover {
+    background-color: #0bbcbf;
+    scale: 1.02;
+}
+
+.btn_tech {
+    background-color: #ef132c;
+}
+
+.btn_tech:hover {
+    background-color: #c6091f;
+    scale: 1.02;
+}
