@@ -28,8 +28,9 @@ const IMAGES = [
 export default function MemoFood() {
   const [guessed, setGuessed] = useState([]); //son los que ya adivine y tienen que quedar mostrandose
   const [selected, setSelected] = useState([]); //se dan vuelta temporalmente
-  const navigate = useNavigate();
   const [resetGame, setResetGame] = useState(false);
+  
+  const navigate = useNavigate();
 
   const gotoMemoTech = () => {
     navigate("/memotech");
@@ -47,11 +48,10 @@ export default function MemoFood() {
       title: "You Win!",
       html: "<h3>Congrats! You Win!</h3>",
       footer: "<p>Keep playing with us.</p>",
-      showConfirmButton: true // Agregamos esta opción
+      showConfirmButton: true
     }).then((result) => {
       if (result.isConfirmed) {
-        // Se ha hecho clic en el botón "Ok"
-        // navigate("/memofood")
+        // Se hace clic en el botón "Ok"
         setResetGame(true);
       }
     });

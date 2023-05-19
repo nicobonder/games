@@ -28,6 +28,7 @@ const IMAGES = [
 export default function MemoTech() {
   const [guessed, setGuessed] = useState([]); //son los que ya adivine y tienen que quedar mostrandose
   const [selected, setSelected] = useState([]); //se dan vuelta temporalmente
+  const [resetGame, setResetGame] = useState(false);
 
    const navigate = useNavigate();
 
@@ -38,23 +39,23 @@ export default function MemoTech() {
     navigate("/memobrand");
   };
 
-  const youWin = () => {
-    Swal.fire({
-      imageUrl: youwin,
-      imageHeight: 150,
-      imageWidth: 200,
-      imageAlt: "You win!.",
-      title: "You Win!",
-      html: "<h3>Congrats! You Win!</h3>",
-      footer: "<p>Keep playing with us.</p>",
-      showConfirmButton: true // Agregamos esta opción
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Se ha hecho clic en el botón "Ok"
-        location.reload();
-      }
-    });
-  };
+    const youWin = () => {
+      Swal.fire({
+        imageUrl: youwin,
+        imageHeight: 150,
+        imageWidth: 200,
+        imageAlt: "You win!.",
+        title: "You Win!",
+        html: "<h3>Congrats! You Win!</h3>",
+        footer: "<p>Keep playing with us.</p>",
+        showConfirmButton: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Se hace clic en el botón "Ok"
+          setResetGame(true);
+        }
+      });
+    };
 
   //Necesito que solo me permita dar vuelta 2 cartas
   useEffect(() => {
@@ -70,9 +71,16 @@ export default function MemoTech() {
   }, [selected]);
 
   useEffect(() => {
+    if (resetGame) {
+      setGuessed([]);
+      setSelected([]);
+      setResetGame(false); // Desactivar el reinicio del juego
+    }
+  }, [resetGame]);
+
+  useEffect(() => {
     if(guessed.length === IMAGES.length) {
       youWin()
-      // location.reload();
     } 
   }, [guessed])
 

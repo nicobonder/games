@@ -34,8 +34,9 @@ const IMAGES = [
 export default function MemoBrand() {
   const [guessed, setGuessed] = useState([]); //son los que ya adivine y tienen que quedar mostrandose
   const [selected, setSelected] = useState([]); //se dan vuelta temporalmente
+  const [resetGame, setResetGame] = useState(false);
 
-  const navigate = useNavigate();
+   const navigate = useNavigate();
 
   const gotoMemoTech = () => {
     navigate("/memotech");
@@ -53,11 +54,11 @@ export default function MemoBrand() {
       title: "You Win!",
       html: "<h3>Congrats! You Win!</h3>",
       footer: "<p>Keep playing with us.</p>",
-      showConfirmButton: true // Agregamos esta opción
+      showConfirmButton: true
     }).then((result) => {
       if (result.isConfirmed) {
-        // Se ha hecho clic en el botón "Ok"
-        location.reload();
+        // Se hace clic en el botón "Ok"
+        setResetGame(true);
       }
     });
   };
@@ -76,12 +77,18 @@ export default function MemoBrand() {
   }, [selected]);
 
   useEffect(() => {
+    if (resetGame) {
+      setGuessed([]);
+      setSelected([]);
+      setResetGame(false); // Desactivar el reinicio del juego
+    }
+  }, [resetGame]);
+
+  useEffect(() => {
     if(guessed.length === IMAGES.length) {
       youWin()
-      // location.reload();
     } 
   }, [guessed])
-
 
   return (
     <>
