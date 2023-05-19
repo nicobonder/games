@@ -29,6 +29,7 @@ export default function MemoFood() {
   const [guessed, setGuessed] = useState([]); //son los que ya adivine y tienen que quedar mostrandose
   const [selected, setSelected] = useState([]); //se dan vuelta temporalmente
   const navigate = useNavigate();
+  const [resetGame, setResetGame] = useState(false);
 
   const gotoMemoTech = () => {
     navigate("/memotech");
@@ -50,7 +51,8 @@ export default function MemoFood() {
     }).then((result) => {
       if (result.isConfirmed) {
         // Se ha hecho clic en el botón "Ok"
-        location.reload();
+        // navigate("/memofood")
+        setResetGame(true);
       }
     });
   };
@@ -68,9 +70,16 @@ export default function MemoFood() {
   }, [selected])
 
   useEffect(() => {
+    if (resetGame) {
+      setGuessed([]);
+      setSelected([]);
+      setResetGame(false); // Desactivar el reinicio del juego
+    }
+  }, [resetGame]);
+
+  useEffect(() => {
     if(guessed.length === IMAGES.length) {
       youWin()
-      // location.reload();
     } 
   }, [guessed])
 
