@@ -70,7 +70,7 @@ export default function MemoFood() {
   useEffect(() => {
     if(guessed.length === IMAGES.length) {
       alert("You Win!");
-      location.reload();
+ 
     } 
   }, [guessed])
 
