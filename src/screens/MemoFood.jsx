@@ -1,9 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Swal from "sweetalert2";
-import youwin from "../assets/youWin.gif"
-import { useNavigate } from "react-router-dom";
-
-import '../styles/memo.css';
 
 const IMAGES = [
   "https://icongr.am/fontawesome/apple.svg?size=128&color=f3f1f1",
@@ -15,15 +10,14 @@ const IMAGES = [
   "https://icongr.am/clarity/savings.svg?size=128&color=f3f1f1",
   "https://icongr.am/material/bowl-mix.svg?size=128&color=f3f1f1"
 
-// ].flatMap((image) => [image, image]) 
-].flatMap((image) => [`a|${image}`, `b|${image}`]) //esto sirve para poder distinguir cual
-                                                // de las 2 es la que estoy dando vueltas
-                                                //pero eso hace q ahora la url quede mal, asi que hay que hacer un split
-  .sort(() => Math.random() - 0.5); //para que se ordenen de forma random
-//flatMap es una funcion que nos permite hacer un flat de un array. Permite tomar los elementos, 
-//y hacer un solo nivel de todos los niveles que tengo que devolver.
-//si tengo una array de varios niveles, la transforma en una array de un solo nivel.
-//en este caso la uso para que devuelva dos veces la misma imagen.
+].flatMap((image) => [`a|${image}`, `b|${image}`])
+  .sort(() => Math.random() - 0.5); 
+
+import Swal from "sweetalert2";
+import youwin from "../assets/youWin.gif"
+import { useNavigate } from "react-router-dom";
+
+import '../styles/memo.css';
 
 export default function MemoFood() {
   const [guessed, setGuessed] = useState([]); //son los que ya adivine y tienen que quedar mostrandose
@@ -39,24 +33,6 @@ export default function MemoFood() {
     navigate("/memobrand");
   };
 
-  const youWin = () => {
-    Swal.fire({
-      imageUrl: youwin,
-      imageHeight: 150,
-      imageWidth: 200,
-      imageAlt: "You win!.",
-      title: "You Win!",
-      html: "<h3>Congrats! You Win!</h3>",
-      footer: "<p>Keep playing with us.</p>",
-      showConfirmButton: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Se hace clic en el botón "Ok"
-        setResetGame(true);
-      }
-    });
-  };
-
   //Necesito que solo me permita dar vuelta 2 cartas
   useEffect(() => {
    if(selected.length === 2) {
@@ -69,6 +45,33 @@ export default function MemoFood() {
        }  
   }, [selected])
 
+
+  function youWin() {
+    Swal.fire({
+      imageUrl: youwin,
+      imageHeight: 150,
+      imageWidth: 200,
+      imageAlt: "You win!.",
+      title: "You Win!",
+      html: "<h3>Congrats! You Win!</h3>",
+      footer: "<p>Keep playing with us.</p>",
+      showConfirmButton: true,
+      confirmButtonText: "Restart",
+      confirmButtonColor: "#DD6B55",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Se hace clic en el botón "Ok"
+        location.reload(true);
+      }
+    });
+  }
+  
+  useEffect(() => {
+    if(guessed.length === IMAGES.length) {
+      youWin()
+    } 
+  }, [guessed])
+
   useEffect(() => {
     if (resetGame) {
       setGuessed([]);
@@ -76,12 +79,6 @@ export default function MemoFood() {
       setResetGame(false); // Desactivar el reinicio del juego
     }
   }, [resetGame]);
-
-  useEffect(() => {
-    if(guessed.length === IMAGES.length) {
-      youWin()
-    } 
-  }, [guessed])
 
   // const [images, setImages] = useState(IMAGES);
 

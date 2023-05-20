@@ -30,7 +30,7 @@ export default function MemoTech() {
   const [selected, setSelected] = useState([]); //se dan vuelta temporalmente
   const [resetGame, setResetGame] = useState(false);
 
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const gotoMemoFood = () => {
     navigate("/memofood");
