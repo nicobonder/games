@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Swal from 'sweetalert2'
 import youwin from "../assets/youWin.gif"
 import { useNavigate } from "react-router-dom";
+import '../styles/memo.css';
 
 const IMAGES = [
   "https://icongr.am/devicon/npm-original-wordmark.svg?size=128&color=currentColor",
@@ -29,6 +30,7 @@ export default function MemoTech() {
   const [guessed, setGuessed] = useState([]); //son los que ya adivine y tienen que quedar mostrandose
   const [selected, setSelected] = useState([]); //se dan vuelta temporalmente
   const [resetGame, setResetGame] = useState(false);
+  const [shuffledImages, setShuffledImages] = useState([]);
 
   const navigate = useNavigate();
 
@@ -38,52 +40,66 @@ export default function MemoTech() {
   const gotoMemoBrand = () => {
     navigate("/memobrand");
   };
-
-    const youWin = () => {
-      Swal.fire({
-        imageUrl: youwin,
-        imageHeight: 150,
-        imageWidth: 200,
-        imageAlt: "You win!.",
-        title: "You Win!",
-        html: "<h3>Congrats! You Win!</h3>",
-        footer: "<p>Keep playing with us.</p>",
-        showConfirmButton: true
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // Se hace clic en el botón "Ok"
-          setResetGame(true);
-        }
-      });
-    };
-
+  
   //Necesito que solo me permita dar vuelta 2 cartas
   useEffect(() => {
     if (selected.length === 2) {
       if (selected[0].split("|")[1] === selected[1].split("|")[1]) {
-        //si las 2 cartas son iguales, las concateno en guessed
         setGuessed((guessed) => guessed.concat(selected));
       }
-      setTimeout(() => setSelected([]), 1200); //si no pongo el setTimeout, sino son iguales las cartas
-      //borra la primera antes de q de vuelta la segunda
-      //limpio los selected despues de 2 segundos
+      setTimeout(() => setSelected([]), 1200);
     }
   }, [selected]);
+
+  function youWin() {
+    Swal.fire({
+      imageUrl: youwin,
+      imageHeight: 150,
+      imageWidth: 200,
+      imageAlt: "You win!.",
+      title: "You Win!",
+      html: "<h3>Congrats! You Win!</h3>",
+      footer: "<p>Keep playing with us.</p>",
+      showConfirmButton: true,
+      confirmButtonText: "Restart",
+      confirmButtonColor: "#ef132c",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.reload();
+      }
+    });
+  }
+
+  useEffect(() => {
+    if (guessed.length === IMAGES.length) {
+      youWin();
+    }
+  }, [guessed]);
 
   useEffect(() => {
     if (resetGame) {
       setGuessed([]);
       setSelected([]);
-      setResetGame(false); // Desactivar el reinicio del juego
+      setResetGame(false); //desactiva el reinicio del juego
     }
   }, [resetGame]);
 
   useEffect(() => {
-    if(guessed.length === IMAGES.length) {
-      youWin()
-    } 
-  }, [guessed])
+    setShuffledImages(shuffleArray(IMAGES));
+  }, []);
 
+  const shuffleArray = (array) => {
+    const shuffledArray = array.slice();
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledArray[i], shuffledArray[j]] = [
+        shuffledArray[j],
+        shuffledArray[i],
+      ];
+    }
+    return shuffledArray;
+  };
+  
   return (
     <>
       <h1 style={{ textAlign: "center", margin: 14 }}>MEMOTECH</h1>

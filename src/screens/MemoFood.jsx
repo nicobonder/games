@@ -17,7 +17,6 @@ const IMAGES = [
 ].flatMap((image) => [`a|${image}`, `b|${image}`])
   .sort(() => Math.random() - 0.5); 
 
-
   export default function MemoFood() {
     const [guessed, setGuessed] = useState([]);
     const [selected, setSelected] = useState([]);
@@ -54,7 +53,7 @@ const IMAGES = [
         footer: "<p>Keep playing with us.</p>",
         showConfirmButton: true,
         confirmButtonText: "Restart",
-        confirmButtonColor: "#DD6B55",
+        confirmButtonColor: "#d5ce0b",
       }).then((result) => {
         if (result.isConfirmed) {
           window.location.reload();

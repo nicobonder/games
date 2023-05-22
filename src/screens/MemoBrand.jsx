@@ -35,6 +35,7 @@ export default function MemoBrand() {
   const [guessed, setGuessed] = useState([]); //son los que ya adivine y tienen que quedar mostrandose
   const [selected, setSelected] = useState([]); //se dan vuelta temporalmente
   const [resetGame, setResetGame] = useState(false);
+  const [shuffledImages, setShuffledImages] = useState([]);
 
    const navigate = useNavigate();
 
@@ -44,8 +45,17 @@ export default function MemoBrand() {
   const gotoMemoFood = () => {
     navigate("/memofood");
   };
+  
+  useEffect(() => {
+    if (selected.length === 2) {
+      if (selected[0].split("|")[1] === selected[1].split("|")[1]) {
+        setGuessed((guessed) => guessed.concat(selected));
+      }
+      setTimeout(() => setSelected([]), 1200);
+    }
+  }, [selected]);
 
-  const youWin = () => {
+  function youWin() {
     Swal.fire({
       imageUrl: youwin,
       imageHeight: 150,
@@ -54,41 +64,45 @@ export default function MemoBrand() {
       title: "You Win!",
       html: "<h3>Congrats! You Win!</h3>",
       footer: "<p>Keep playing with us.</p>",
-      showConfirmButton: true
+      showConfirmButton: true,
+      confirmButtonText: "Restart",
+      confirmButtonColor: "#20dcdf",
     }).then((result) => {
       if (result.isConfirmed) {
-        // Se hace clic en el botón "Ok"
-        setResetGame(true);
+        window.location.reload();
       }
     });
-  };
+  }
 
-  //Necesito que solo me permita dar vuelta 2 cartas
   useEffect(() => {
-    if (selected.length === 2) {
-      if (selected[0].split("|")[1] === selected[1].split("|")[1]) {
-        //si las 2 cartas son iguales, las concateno en guessed
-        setGuessed((guessed) => guessed.concat(selected));
-      }
-      setTimeout(() => setSelected([]), 1200); //si no pongo el setTimeout, sino son iguales las cartas
-      //borra la primera antes de q de vuelta la segunda
-      //limpio los selected despues de 2 segundos
+    if (guessed.length === IMAGES.length) {
+      youWin();
     }
-  }, [selected]);
+  }, [guessed]);
 
   useEffect(() => {
     if (resetGame) {
       setGuessed([]);
       setSelected([]);
-      setResetGame(false); // Desactivar el reinicio del juego
+      setResetGame(false);
     }
   }, [resetGame]);
 
   useEffect(() => {
-    if(guessed.length === IMAGES.length) {
-      youWin()
-    } 
-  }, [guessed])
+    setShuffledImages(shuffleArray(IMAGES));
+  }, []);
+
+  const shuffleArray = (array) => {
+    const shuffledArray = array.slice();
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledArray[i], shuffledArray[j]] = [
+        shuffledArray[j],
+        shuffledArray[i],
+      ];
+    }
+    return shuffledArray;
+  };
 
   return (
     <>
